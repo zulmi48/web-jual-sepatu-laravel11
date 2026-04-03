@@ -16,7 +16,7 @@ class Shoe extends Model
     protected $fillable = [
         'name',
         'slug',
-        'thumnail',
+        'thumbnail',
         'about',
         'price',
         'stock',
@@ -41,11 +41,11 @@ class Shoe extends Model
         return $this->belongsTo(Brand::class, 'brand_id');
     }
 
-    public function shoe_sizes(): HasMany
+    public function sizes(): HasMany
     {
         return $this->hasMany(ShoeSize::class);
     }
-    public function shoe_photos(): HasMany
+    public function photos(): HasMany
     {
         return $this->hasMany(ShoePhoto::class);
     }
