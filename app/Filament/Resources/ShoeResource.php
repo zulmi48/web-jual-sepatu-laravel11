@@ -37,23 +37,23 @@ class ShoeResource extends Resource
                             ->image()
                             ->required(),
                         Forms\Components\Repeater::make('photos')
-                        ->relationship('shoe_photos')
+                            ->relationship('photos')
                             ->schema([
                                 Forms\Components\FileUpload::make('photo')
                                     ->required()
-                                    ->image()                                    ,
+                                    ->image(),
                             ]),
                         Forms\Components\Repeater::make('sizes')
-                        ->relationship('shoe_sizes')
+                            ->relationship('sizes')
                             ->schema([
                                 Forms\Components\TextInput::make('size')
-                                    ->required()                                ,
+                                    ->required(),
                             ])
                     ]),
                 Forms\Components\Fieldset::make('Additional Information')
                     ->schema([
                         Forms\Components\Textarea::make('about')
-                        ->columnSpan(2)
+                            ->columnSpan(2)
                             ->required(),
                         Forms\Components\Select::make('is_popular')
                             ->options([
@@ -87,18 +87,15 @@ class ShoeResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('slug')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('thumnail')
-                    ->searchable(),
+                Tables\Columns\ImageColumn::make('thumbnail'),
                 Tables\Columns\TextColumn::make('price')
-                    ->money()
+                    ->money('IDR', true)
                     ->sortable(),
                 Tables\Columns\TextColumn::make('stock')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\IconColumn::make('is_popular')
-                    ->boolean(),
+                Tables\Columns\ToggleColumn::make('is_popular')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('category.name')
                     ->numeric()
                     ->sortable(),

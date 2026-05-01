@@ -28,7 +28,7 @@ class ProductTransactionResource extends Resource
                         ->schema([
                             Forms\Components\Grid::make(2)
                                 ->schema([
-                                    Forms\Components\Select::make('shoe_id ')
+                                    Forms\Components\Select::make('shoe_id')
                                         ->relationship('shoe', 'name')
                                         ->searchable()
                                         ->preload()
@@ -60,7 +60,7 @@ class ProductTransactionResource extends Resource
                                                 $set('shoe_sizes', $sizes);
                                             }
                                         }),
-                                    Forms\Components\Select::make('shoe_size_id')
+                                    Forms\Components\Select::make('shoe_size')
                                         ->label('Shoe Size')
                                         ->options(function (callable $get) {
                                             $sizes = $get('shoe_sizes');
@@ -111,6 +111,7 @@ class ProductTransactionResource extends Resource
                                         ->prefix('IDR'),
                                     Forms\Components\TextInput::make('discount_amount')
                                         ->required()
+                                        ->default(0)
                                         ->readonly()
                                         ->numeric()
                                         ->prefix('IDR'),
@@ -208,7 +209,7 @@ class ProductTransactionResource extends Resource
                     })
                     ->color('success')
                     ->requiresConfirmation()
-                    ->visible(fn (ProductTransaction $record) => !$record->is_paid),
+                    ->visible(fn(ProductTransaction $record) => !$record->is_paid),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

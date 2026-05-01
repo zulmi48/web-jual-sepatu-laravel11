@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug');
-            $table->string('thumnail');
+            $table->string('thumbnail');
             $table->text('about');
             $table->unsignedBigInteger('price');
             $table->unsignedBigInteger('stock');
