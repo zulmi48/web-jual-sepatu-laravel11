@@ -8,4 +8,5 @@ interface ShoeRepositoryInterface
     public function getAllNewShoes();
     public function find($id);
     public function getPrice($ticketId);
+    public function searchByName($keyword);
 }
