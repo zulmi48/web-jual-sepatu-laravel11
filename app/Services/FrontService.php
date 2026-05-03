@@ -21,7 +21,7 @@ class FrontService
         return $this->shoeRepository->searchByName($keyword);
     }
 
-    public function getFrontData()
+    public function getFrontPageData()
     {
         $categories = $this->categoryRepository->getAllCategories();
         $popularShoes = $this->shoeRepository->getPopularShoes(4);
