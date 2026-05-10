@@ -22,8 +22,9 @@ class OrderController extends Controller
     public function saveOrder(StoreOrderRequest $request, Shoe $shoe)
     {
         $validated = $request->validated();
-        $validated['shoe'] = $shoe->id;
+        $validated['shoe_id'] = $shoe->id;
         $this->orderService->beginOrder($validated);
+
 
         return redirect()->route('front.booking', $shoe->slug);
     }
@@ -31,6 +32,7 @@ class OrderController extends Controller
     public function booking()
     {
         $data = $this->orderService->getOrderDetails();
+        dd($data);
         return view('order.order', $data);
     }
 

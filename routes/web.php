@@ -10,7 +10,7 @@ Route::get('/browse/{category:slug}', [FrontController::class, 'category'])->nam
 
 Route::get('/details/{shoe:slug}', [FrontController::class, 'details'])->name('front.details');
 
-Route::get('/order/begin/{shoe:slug}', [OrderController::class, 'saveOrder'])->name('front.save_order');
+Route::post('/order/begin/{shoe:slug}', [OrderController::class, 'saveOrder'])->name('front.save_order');
 
 Route::get('/order/booking', [OrderController::class, 'booking'])->name('front.booking');
 
