@@ -70,6 +70,40 @@ class OrderForm extends Component
         }
     }
 
+    public function updatedPromoCode()
+    {
+        $this->applyPromoCode();
+    }
+
+    public function applyPromoCode()
+    {
+        if (!$this->promoCode) {
+            $this->resetDiscount();
+            return;
+        }
+
+        $result = $this->orderService->applyPromoCode($this->promoCode, $this->subTotalAmount);
+
+        if (isset($result['error'])) {
+            session()->flash('error', $result['error']);
+            $this->resetDiscount();
+        } else {
+            session()->flash('success', 'Promo code applied successfully!');
+            $this->discount = $result['discount'];
+            $this->calculateTotal();
+            $this->promoCodeId = $result['promo_code_id'];
+            $this->totalDiscountAmount = $result['discount'];
+        }
+    }
+
+    protected function resetDiscount()
+    {
+        $this->discount = 0;
+        $this->calculateTotal();
+        $this->promoCodeId = null;
+        $this->totalDiscountAmount = 0;
+    }
+
     public function render()
     {
         return view('livewire.order-form');
