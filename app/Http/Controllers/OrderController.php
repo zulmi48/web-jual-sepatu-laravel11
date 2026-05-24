@@ -25,8 +25,6 @@ class OrderController extends Controller
         $validated = $request->validated();
         $validated['shoe_id'] = $shoe->id;
         $this->orderService->beginOrder($validated);
-
-
         return redirect()->route('front.booking', $shoe->slug);
     }
 
@@ -67,7 +65,7 @@ class OrderController extends Controller
             return redirect()->route('front.order_finished', $productTransactionId);
         }
 
-        dd($productTransactionId);
+        // dd($productTransactionId);
 
         return redirect()->route('front.index')->withErrors(['error' => session('error') ?? 'Payment failed. Please try again.']);
     }

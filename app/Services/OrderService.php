@@ -42,8 +42,9 @@ class OrderService
         $this->orderRepository->saveToSession($orderData);
     }
 
-    public function getMyOrderDetails(array $validated){
-    return $this->orderRepository->findByTrxIdAndPhoneNumber($validated['booking_trx_id'], $validated['phone']);
+    public function getMyOrderDetails(array $validated)
+    {
+        return $this->orderRepository->findByTrxIdAndPhoneNumber($validated['booking_trx_id'], $validated['phone']);
     }
 
     public function getOrderDetails()
@@ -114,7 +115,7 @@ class OrderService
                 $validated['discount_amount'] = $orderData['total_discount_amount'];
                 $validated['promo_code_id'] = $orderData['promo_code_id'];
                 $validated['shoe_id'] = $orderData['shoe_id'];
-                $validated['shoe_size'] = $orderData['shoe_size'];
+                $validated['shoe_size'] = $orderData['size_id'];
                 $validated['is_paid'] = false;
                 $validated['booking_trx_id'] = ProductTransaction::generateUniqueTrxId();
 
