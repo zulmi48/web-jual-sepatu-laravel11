@@ -48,12 +48,6 @@ class OrderForm extends Component
         $this->calculateTotal();
     }
 
-    public function calculateTotal()
-    {
-        $this->subTotalAmount = $this->shoe->price * $this->quantity;
-        $this->grandTotalAmount = $this->subTotalAmount - $this->discount;
-    }
-
     public function increaseQuantity()
     {
         if ($this->quantity < $this->shoe->stock) {
@@ -88,10 +82,10 @@ class OrderForm extends Component
             session()->flash('error', $result['error']);
             $this->resetDiscount();
         } else {
-            session()->flash('success', 'Promo code applied successfully!');
+            session()->flash('message', 'Promo code applied successfully!');
             $this->discount = $result['discount'];
             $this->calculateTotal();
-            $this->promoCodeId = $result['promo_code_id'];
+            $this->promoCodeId = $result['promoCodeId'];
             $this->totalDiscountAmount = $result['discount'];
         }
     }
@@ -102,6 +96,12 @@ class OrderForm extends Component
         $this->calculateTotal();
         $this->promoCodeId = null;
         $this->totalDiscountAmount = 0;
+    }
+
+    public function calculateTotal()
+    {
+        $this->subTotalAmount = $this->shoe->price * $this->quantity;
+        $this->grandTotalAmount = $this->subTotalAmount - $this->discount;
     }
 
     public function rules()
@@ -116,19 +116,20 @@ class OrderForm extends Component
     protected function gatherBookingData(array $validatedData): array
     {
         return [
-            'name'=>$validatedData['name'],
-            'email'=>$validatedData['email'],
-            'grand_total_amount'=>$this->grandTotalAmount,
-            'sub_total_amount'=>$this->subTotalAmount,
-            'total_discount_amount'=>$this->totalDiscountAmount,
-            'discount'=>$this->discount,
-            'promo_code'=>$this->promoCode,
-            'promo_code_id'=>$this->promoCodeId,
-            'quantity'=>$this->quantity,
+            'name' => $validatedData['name'],
+            'email' => $validatedData['email'],
+            'grand_total_amount' => $this->grandTotalAmount,
+            'sub_total_amount' => $this->subTotalAmount,
+            'total_discount_amount' => $this->totalDiscountAmount,
+            'discount' => $this->discount,
+            'promo_code' => $this->promoCode,
+            'promo_code_id' => $this->promoCodeId,
+            'quantity' => $this->quantity,
         ];
     }
 
-    public function submit() {
+    public function submit()
+    {
         $validatedData = $this->validate();
         $bookingData = $this->gatherBookingData($validatedData);
         $this->orderService->updateCustomerData($bookingData);

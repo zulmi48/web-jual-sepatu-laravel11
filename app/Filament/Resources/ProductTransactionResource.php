@@ -195,6 +195,7 @@ class ProductTransactionResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\Action::make('Approve')
                     ->label('Approve Payment')
                     ->action(function (ProductTransaction $record) {

@@ -7,6 +7,7 @@ use App\Repositories\CategoryRepository;
 use App\Repositories\OrderRepository;
 use App\Repositories\PromoCodeRepository;
 use App\Repositories\ShoeRepository;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use PDO;
@@ -41,6 +42,10 @@ class OrderService
         $this->orderRepository->saveToSession($orderData);
     }
 
+    public function getMyOrderDetails(array $validated){
+    return $this->orderRepository->findByTrxIdAndPhoneNumber($validated['booking_trx_id'], $validated['phone']);
+    }
+
     public function getOrderDetails()
     {
         $orderData = $this->orderRepository->getOrderDataFromSession();
@@ -49,7 +54,7 @@ class OrderService
         $quantity = isset($orderData['quantity']) ? $orderData['quantity'] : 1;
         $subTotalAmount = $shoe->price * $quantity;
 
-        $taxRate = 0.11;
+        $taxRate = 0;
         $totalTax = $subTotalAmount * $taxRate;
 
         $grandTotalAmount = $subTotalAmount + $totalTax;
@@ -69,7 +74,7 @@ class OrderService
             $discount = $promo->discount_amount;
             $grandTotalAmount = $subTotalAmount - $discount;
             $promoCodeId = $promo->id;
-            return ['discount' => $discount, 'grand_total_amount' => $grandTotalAmount, 'promo_code_id' => $promoCodeId];
+            return ['discount' => $discount, 'grandTotalAmount' => $grandTotalAmount,  'promoCodeId' => $promoCodeId];
         }
 
         return ['error' => 'Kode promo tidak tersedia'];
@@ -91,7 +96,7 @@ class OrderService
         $productTransactionId = null;
 
         try {
-            DB::transaction(function () use ($validated, $productTransactionId, $orderData) {
+            DB::transaction(function () use ($validated, &$productTransactionId, $orderData) {
                 if (isset($validated['proof'])) {
                     $proofPath = $validated['proof']->store('proofs', 'public');
                     $validated['proof'] = $proofPath;
@@ -109,16 +114,15 @@ class OrderService
                 $validated['discount_amount'] = $orderData['total_discount_amount'];
                 $validated['promo_code_id'] = $orderData['promo_code_id'];
                 $validated['shoe_id'] = $orderData['shoe_id'];
-                $validated['size_id'] = $orderData['size_id'];
+                $validated['shoe_size'] = $orderData['shoe_size'];
                 $validated['is_paid'] = false;
                 $validated['booking_trx_id'] = ProductTransaction::generateUniqueTrxId();
 
                 $newTransaction = $this->orderRepository->createTransaction($validated);
-
                 $productTransactionId = $newTransaction->id;
             });
         } catch (\Exception $e) {
-            Log::error('Error in payment confirmation : ', $e->getMessage());
+            Log::error('Error in payment confirmation : ', ['exception' => $e->getMessage()]);
             session()->flash('error', $e->getMessage());
             return null;
         }

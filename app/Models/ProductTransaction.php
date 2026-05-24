@@ -31,20 +31,24 @@ class ProductTransaction extends Model
 
     public function shoe(): BelongsTo
     {
-        return $this->belongsTo(Shoe::class);
+        return $this->belongsTo(Shoe::class, 'shoe_id');
+    }
+    public function shoeSize(): BelongsTo
+    {
+        return $this->belongsTo(ShoeSize::class, 'shoe_size');
     }
 
     public function promoCode(): BelongsTo
     {
-        return $this->belongsTo(PromoCode::class);
+        return $this->belongsTo(PromoCode::class, 'promo_code_id');
     }
 
-    public function generateUniqueTrxId(): void
+    public static function generateUniqueTrxId()
     {
         do {
             $trxId = 'TRX-' . random_int(100000, 9999999);
         } while (self::where('booking_trx_id', $trxId)->exists());
 
-        $this->booking_trx_id = $trxId;
+        return $trxId;
     }
 }

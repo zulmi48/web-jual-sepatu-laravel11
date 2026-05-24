@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCheckBookingRequest;
 use App\Http\Requests\StoreCustomerDataRequest;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\StorePaymentRequest;
@@ -39,7 +40,7 @@ class OrderController extends Controller
     public function customerData()
     {
         $data = $this->orderService->getOrderDetails();
-        dd($data);
+        // dd($data);
         return view('order.customer_data', $data);
     }
 
@@ -47,13 +48,13 @@ class OrderController extends Controller
     {
         $validated = $request->validated();
         $this->orderService->updateCustomerData($validated);
-
         return redirect()->route('front.payment');
     }
 
     public function payment()
     {
         $data = $this->orderService->getOrderDetails();
+        // dd($data);
         return view('order.payment', $data);
     }
 
@@ -66,11 +67,31 @@ class OrderController extends Controller
             return redirect()->route('front.order_finished', $productTransactionId);
         }
 
-        return redirect()->route('front.index')->withErrors(['error' => 'Payment failed. please try again']);
+        dd($productTransactionId);
+
+        return redirect()->route('front.index')->withErrors(['error' => session('error') ?? 'Payment failed. Please try again.']);
     }
 
     public function orderFinished(ProductTransaction $productTransaction)
     {
-        dd($productTransaction);
+        return view('order.order_finished', compact('productTransaction'));
+    }
+
+    public function checkBooking()
+    {
+        return view('order.my_order');
+    }
+
+    public function checkBookingDetails(StoreCheckBookingRequest $request)
+    {
+        $validated = $request->validated();
+
+        $orderDetails = $this->orderService->getMyOrderDetails($validated);
+
+        if ($orderDetails) {
+            return view('order.my_order_details', compact('orderDetails'));
+        }
+
+        return redirect()->route('front.check_booking')->with(['error' => 'Transaction not found']);
     }
 }
