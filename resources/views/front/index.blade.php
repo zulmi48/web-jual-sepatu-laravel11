@@ -23,11 +23,11 @@
                 <img src="{{ asset('assets/images/icons/notification.svg') }}" class="w-10 h-10" alt="icon">
             </a>
         </div>
-        <form class="flex justify-between items-center mx-4">
+        <form action="{{ route('front.search') }}" class="flex justify-between items-center mx-4">
             <div
                 class="relative flex items-center w-full rounded-l-full px-[14px] gap-[10px] bg-white transition-all duration-300 focus-within:ring-2 focus-within:ring-[#FFC700]">
                 <img src="{{ asset('assets/images/icons/search-normal.svg') }}" class="w-6 h-6" alt="icon">
-                <input type="text"
+                <input type="text" name="keyword"
                     class="w-full py-[14px] appearance-none bg-white outline-none font-semibold placeholder:font-normal placeholder:text-[#878785]"
                     placeholder="Search product...">
             </div>
@@ -153,7 +153,7 @@
 
             </div>
         </section>
-        <x-bottom-nav/>
+        <x-bottom-nav />
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>

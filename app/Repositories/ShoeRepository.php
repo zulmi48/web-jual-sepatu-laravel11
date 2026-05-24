@@ -12,7 +12,7 @@ class ShoeRepository implements ShoeRepositoryInterface
         return Shoe::where('is_popular', true)->latest()->take($limit)->get();
     }
 
-    public function searchByName($keyword)
+    public function searchByName(string $keyword)
     {
         return Shoe::where('name', 'like', '%' . $keyword . '%')->get();
     }
